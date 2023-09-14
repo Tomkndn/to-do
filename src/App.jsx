@@ -1,19 +1,21 @@
-import {useState} from 'react'
-
 import './App.css'
-import SignIn from './components/SignIn'
-import SignUp from './components/SignUp'
+import {useState} from 'react'
+import SignInOut from './components/SignInOut'
+import HomeTask from './components/HomeTask'
 
 function App() {
-  const [signIn,setSignIn] = useState(1)
+
+  const [signInGranted,setSignInGranted] = useState(1);
+
   return (
     <>
-    {signIn?
-    <SignIn setSignIn={setSignIn}/>:
-    <SignUp setSignIn={setSignIn}/>
-    }
+      {signInGranted ? (
+        <HomeTask setSignInGranted={setSignInGranted} />
+      ) : (
+        <SignInOut setSignInGranted={setSignInGranted} />
+      )}
     </>
-  )
+  );
 }
 
 export default App

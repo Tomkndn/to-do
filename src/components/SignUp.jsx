@@ -5,7 +5,7 @@ const SignUp = ({setSignIn}) => {
         setSignIn(1)
     }
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center justify-center h-[100vh]'>
 
       <div className='rounded-md border-2   bg-white p-10'>
 
@@ -23,20 +23,20 @@ const SignUp = ({setSignIn}) => {
           <input type="email" className="p-2 w-[25rem] border text-base border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200 focus:border" id="exampleInputEmail1" aria-describedby="emailHelp"  placeholder='Email'/>
             
         </div>
-        <div className="mb-3">
+        <div className="">
             
           <input type="password" className="border border-slate-300 text-base rounded-md p-2 w-[25rem] hover:bg-slate-100 active:border-cyan-200" id="exampleInputPassword1" placeholder='Password' />
             
         </div>
-        <ul className="text-sm">
-          <li>Passwords must contain at least 1 upper case letter.</li>
-          <li>Password length must be greater than 7 and less than 21.</li>
+        <ul className="text-sm p-3">
+          <li className="text-slate-700">Passwords must contain at least 1 upper case letter.</li>
+          <li className="text-slate-700">Password length must be greater than 7 and less than 21.</li>
         </ul>
-        <hr className='border-[1px] bg-black'/>
+        <hr className='border border-slate-400'/>
         
         <button type="submit" className="w-[100%] my-2 transition duration-200 ease-in-out text-white p-1 rounded-md bg-cyan-600 hover:bg-cyan-700">Sign Up</button>
         
-        <button onClick={signInHandler} className="w-[100%] transition duration-200 ease-in-out text-xs p-1 rounded-md hover:bg-gray-200 ">HAVE AN ACCOUNT? SIGN In</button>
+        <button onClick={signInHandler} className="w-[100%] transition duration-200 ease-in-out text-xs p-1 rounded-md hover:bg-gray-200 ">HAVE AN ACCOUNT? SIGN IN</button>
         
       </div>
       
