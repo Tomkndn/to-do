@@ -25,7 +25,13 @@ const SignIn = ({ setSignIn, setSignInGranted }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        console.log(userCredential.user);
+        const user = userCredential.user;
+        const newUserInfo = {...user};
+        newUserInfo.complect = "Succesfully Login";
+        newUserInfo.isSignIn = true;
+        newUserInfo.error = "";
+        alert("Succefully SignIn")
+        console.log(newUserInfo)
         // ...
         setSignInGranted(1)
       })
@@ -52,7 +58,7 @@ const SignIn = ({ setSignIn, setSignInGranted }) => {
   return (
     <div className="flex items-center justify-center h-[100vh]">
       <form
-        className="rounded-md border-2 w-[50%] bg-white p-28"
+        className="rounded-md border-2 w-[40%] bg-white p-20"
         autoComplete="off"
         onSubmit={handleSubmit}
       >
