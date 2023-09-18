@@ -7,7 +7,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-const SignIn = ({ setSignIn, setSignInGranted }) => {
+const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
 
@@ -25,15 +25,12 @@ const SignIn = ({ setSignIn, setSignInGranted }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
-        const newUserInfo = {...user};
-        newUserInfo.complect = "Succesfully Login";
-        newUserInfo.isSignIn = true;
-        newUserInfo.error = "";
-        alert("Succefully SignIn")
-        console.log(newUserInfo)
+        // const user = userCredential.user;
+        alert("Succefully SignIn");
+        // console.log(user)
+        setUid(userCredential.user.uid);
         // ...
-        setSignInGranted(1)
+        setSignInGranted(1);
       })
       .catch((err) => {
         if (

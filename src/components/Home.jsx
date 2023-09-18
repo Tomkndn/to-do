@@ -1,11 +1,52 @@
-// import React from 'react'
+import { getDatabase, ref, child,get} from "firebase/database";
+import { useState} from 'react'
 
-const Home = ({ setNewTask, setSignInGranted }) => {
+const Home = ({ setNewTask, setSignInGranted, uid }) => {
+  const [name, setName] = useState(null);
+  const [empty,setEmpty] = useState(0)
+
+  // useEffect(() => {
+    const dbRef = ref(getDatabase());
+    get(child(dbRef, `users/${uid}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        setName(snapshot.val().username);
+        setEmpty(1)
+      }else{
+        setEmpty(0)
+      }
+    });
+
+    // return () => {
+      // const db = getDatabase();
+      // const starCountRef = ref(db, "users/" + uid + "/task");
+      // onValue(starCountRef, (snapshot) => {
+      //   Object.values(snapshot.val()).forEach((val) => {
+      //     let title = val.title;
+      //     let date = val.date;
+      //     let description = val.description;
+      //     console.log(title,date,description)
+      //   });
+      // });
+      // data.push({title: title, date: date, description: description})
+      // data = Object.assign(val, {title: title, date: date, description: description});
+      // taskData.push(data)
+    // };
+  // }, []);
+
+  // get(child(dbRef, `users/${uid}/task`)).then((snapshot) => {
+  //   if (snapshot.exists()) {
+  //     Object.values(snapshot.val()).forEach((val) => {
+  //       console.log(val);
+  //     });
+  //   }
+  // })
+
   return (
     <div className="flex justify-center flex-col items-center mx-[20rem]">
-      <div className="flex mt-[3.5rem] relative mb-8 w-[100%]">
-        <h2 className="text-4xl font-semibold text-slate-100">
-          Get things done.
+      <div className="flex mt-[3.5rem] relative mb-7 w-[100%]">
+        <h2 className="text-3xl font-semibold text-slate-100">
+          <span className="text-5xl text-red-300">{name}!!!</span> Get your
+          things done.
         </h2>
 
         <button
@@ -18,7 +59,7 @@ const Home = ({ setNewTask, setSignInGranted }) => {
         </button>
         <button
           className="text-lg font-medium rounded-3xl absolute right-0 bg-slate-200 p-3"
-           onClick={() => {
+          onClick={() => {
             setSignInGranted(0);
           }}
         >
@@ -32,6 +73,7 @@ const Home = ({ setNewTask, setSignInGranted }) => {
         <input
           className="p-3 pl-12 w-[20rem] text-black-800 hover:bg-slate-300 rounded-lg bg-slate-200"
           type="search"
+          name="search"
           placeholder="Search"
           aria-label="Search"
         />
@@ -45,9 +87,9 @@ const Home = ({ setNewTask, setSignInGranted }) => {
         </div>
       </div>
 
-      <div></div>
+      <div>{empty}</div>
     </div>
   );
 };
 
-export default Home
+export default Home;

@@ -5,14 +5,12 @@ import {
   getAuth,
 } from "firebase/auth";
 import { firebaseApp } from "../firebase";
+import { getDatabase, ref, set } from "firebase/database";
+
 
 const SignUp = ({setSignIn}) => {
 
-    function signInHandler(){
-        setSignIn(1)
-    }
-
-      const [input, setInput] = useState({ name:"", email: "", password: "" });
+      const [input, setInput] = useState({email: "", password: "" });
       const [error, setError] = useState(null);
 
       // initialised auth instance
@@ -26,13 +24,19 @@ const SignUp = ({setSignIn}) => {
         let email = input.email;
         let password = input.password;
 
+        const db = getDatabase();
         // creating a new user
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // Signed up
-            console.log(userCredential.user);
-            alert("SignUp Successfully.")
-            setSignIn(1)
+                console.log(userCredential.user.uid);
+                set(ref(db, "users/" + userCredential.user.uid), {
+                  username: input.name,
+                  email: email,
+                  password: password,
+                })
+                alert("SignUp Successfully.")
+                setSignIn(1)
             // ...
           })
           .catch((err) => {
@@ -55,11 +59,11 @@ const SignUp = ({setSignIn}) => {
 
   return (
     <div className="flex items-center justify-center h-[100vh]">
-      <form
-        method='POST'
+      <div
+        // method='POST'
         className="rounded-md border-2   bg-white p-20"
         autoComplete="off"
-        onSubmit={handleSubmit}
+        // onSubmit={handleSubmit}
       >
         <h2 className="text-5xl font-bold mb-3">JOIN US...</h2>
 
@@ -120,19 +124,19 @@ const SignUp = ({setSignIn}) => {
 
         <button
           type="submit"
-          // onClick={handleSubmit}
+          onClick={handleSubmit}
           className=" text-lg w-[100%] my-2 transition duration-200 ease-in-out text-white p-1 rounded-md bg-cyan-600 hover:bg-cyan-700"
         >
           Sign Up
         </button>
 
         <button
-          onClick={signInHandler}
+          onClick={()=>{setSignIn(1);}}
           className="w-[100%] transition duration-200 ease-in-out text-md p-1 rounded-md hover:bg-gray-200 "
         >
           HAVE AN ACCOUNT? SIGN IN
         </button>
-      </form>
+      </div>
     </div>
   );
 }
