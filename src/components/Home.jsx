@@ -1,45 +1,72 @@
-import { getDatabase, ref, child,get} from "firebase/database";
+import { getDatabase, ref, child,get,onValue,remove} from "firebase/database";
+import { useEffect } from "react";
 import { useState} from 'react'
+import Task from "./Task";
+import NoTask from "./NoTask";
 
-const Home = ({ setNewTask, setSignInGranted, uid }) => {
+const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
   const [name, setName] = useState(null);
-  const [empty,setEmpty] = useState(0)
+  const [empty, setEmpty] = useState(0);
+  const [projects,setProjects] = useState([]);
 
-  // useEffect(() => {
-    const dbRef = ref(getDatabase());
-    get(child(dbRef, `users/${uid}`)).then((snapshot) => {
-      if (snapshot.exists()) {
-        setName(snapshot.val().username);
-        setEmpty(1)
-      }else{
-        setEmpty(0)
-      }
+  const dbRef = ref(getDatabase());
+  const db = getDatabase();
+  const starCountRef = ref(db, "users/" + uid + "/task");
+  get(child(dbRef, `users/${uid}`)).then((snapshot) => {
+    setName(snapshot.val().username);
+    if (snapshot.exists()&&projects.length) {
+      setEmpty(1);
+    } else {
+      setEmpty(0);
+    }
     });
 
-    // return () => {
-      // const db = getDatabase();
-      // const starCountRef = ref(db, "users/" + uid + "/task");
-      // onValue(starCountRef, (snapshot) => {
-      //   Object.values(snapshot.val()).forEach((val) => {
-      //     let title = val.title;
-      //     let date = val.date;
-      //     let description = val.description;
-      //     console.log(title,date,description)
-      //   });
-      // });
-      // data.push({title: title, date: date, description: description})
-      // data = Object.assign(val, {title: title, date: date, description: description});
-      // taskData.push(data)
-    // };
-  // }, []);
+    useEffect(() => {
+      onValue(starCountRef, (snapshot) => {
+        const newProject = []
+        Object.values(snapshot.val()).forEach((val) => {
+          const data = {
+            title :val.title,
+            date :val.date,
+            description :val.description,
+          }
+          newProject.push(data);
+        });
+        setProjects(newProject)
+        // setProjects((projects) => [...projects, data]);
+      });
+    }, [newTask,uid]);
 
-  // get(child(dbRef, `users/${uid}/task`)).then((snapshot) => {
-  //   if (snapshot.exists()) {
-  //     Object.values(snapshot.val()).forEach((val) => {
-  //       console.log(val);
-  //     });
-  //   }
-  // })
+    function deleteTask(title){
+      // alert("Hello")
+      const updatedProjects = projects.filter(
+        (project) => project.title !== title
+      );
+      setProjects(updatedProjects);
+
+      get(starCountRef)
+      .then((snapshot) => {
+          const tasks = snapshot.val();
+          // Find the task with the matching title and delete it
+          Object.keys(tasks).forEach((taskId) => {
+            if (tasks[taskId].title === title) {
+              const taskRefToDelete = ref(db, `users/${uid}/task/${taskId}`);
+              remove(taskRefToDelete)
+                .then(() => {
+                  console.log("Task deleted successfully");
+                  // Update the state if needed
+                })
+                .catch((error) => {
+                  console.error("Error deleting task:", error);
+                });
+            }
+          });
+        
+      })
+      .catch((error) => {
+        console.error("Error fetching tasks:", error);
+      });
+    }
 
   return (
     <div className="flex justify-center flex-col items-center mx-[20rem]">
@@ -69,7 +96,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
 
       <hr className="border-2 w-[100%] border-slate-400" />
 
-      <div className="flex relative w-[100%] mt-5">
+      <div className="flex relative w-[100%] my-5">
         <input
           className="p-3 pl-12 w-[20rem] text-black-800 hover:bg-slate-300 rounded-lg bg-slate-200"
           type="search"
@@ -87,7 +114,19 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         </div>
       </div>
 
-      <div>{empty}</div>
+      <div className="w-[100%]">
+        {empty
+          ? projects.map((project, index) => (
+              <Task
+                key={index}
+                title={project.title}
+                date={project.date}
+                description={project.description}
+                deleteTask={deleteTask}
+              />
+            ))
+          : <NoTask/>}
+      </div>
     </div>
   );
 };

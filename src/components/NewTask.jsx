@@ -3,16 +3,21 @@ import {useState} from 'react'
 const NewTask = ({setNewTask,uid}) => {
 
     const [input, setInput] = useState({ title: "", date: "", description: ""});
+    const db = getDatabase();
     function createTask(e){
       e.preventDefault();
-      let title = input.title;
-      let date = input.date;
-      let description = input.description;
-      const db = getDatabase();
-      push(ref(db, "users/" + uid +"/task"), {
-        title: title,
-        date: date,
-        description: description,
+      const data = {
+      title: input.title,
+      date: input.date,
+      description: input.description,
+      }
+      const newTaskRef = push(ref(db, "users/" + uid +"/task"),data);
+      newTaskRef
+      .then(() => {
+        alert('Task added successfully');
+      })
+      .catch((error) => {
+        console.error('Error adding data:', error);
       });
       setNewTask(1)
     }
