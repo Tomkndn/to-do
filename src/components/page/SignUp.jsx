@@ -4,7 +4,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
 } from "firebase/auth";
-import { firebaseApp } from "../firebase";
+import { firebaseApp } from "../../firebase";
 import { getDatabase, ref, set } from "firebase/database";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

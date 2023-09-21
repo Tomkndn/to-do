@@ -1,6 +1,6 @@
 import "./SignIn";
 import { useState } from 'react'
-import { firebaseApp } from "../firebase";
+import { firebaseApp } from "../../firebase";
 import {
   AuthErrorCodes,
   getAuth,

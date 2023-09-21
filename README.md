@@ -10,11 +10,12 @@
 |  tom@gmail.com  |   Tom1234    | 
 |  abcd@gmail.com |   abcd1234   |
 
-`The more full feature is comming soon!`
+`The more full feature is comming soon! like filter option.`
 
 ## Technology
 - Frontend
   - React - A JavaScript library for building user interfaces
+  - Tailwind - CSS framework for styling.
   - Create React App - React starter template
   - Toastify - For toast notification
   - React-Icons - For icons

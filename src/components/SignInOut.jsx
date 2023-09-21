@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import SignIn from './SignIn'
-import SignUp from './SignUp'
+import SignIn from './page/SignIn'
+import SignUp from './page/SignUp'
 
 const SignInOut = ({ setSignInGranted, setUid }) => {
   const [signIn, setSignIn] = useState(1);

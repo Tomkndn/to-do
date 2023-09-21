@@ -1,8 +1,8 @@
 import { getDatabase, ref, child,get,onValue,remove} from "firebase/database";
 import { useEffect } from "react";
 import { useState} from 'react'
-import Task from "./Task";
-import NoTask from "./NoTask";
+import Task from "../Task";
+import NoTask from "../NoTask";
 import { BsSearch } from "react-icons/bs";
 import { BiLogIn } from "react-icons/bi";
 import { ToastContainer, toast } from "react-toastify";

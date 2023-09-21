@@ -1,6 +1,6 @@
 import {useState} from 'react'
-import Home from './Home'
-import NewTask from './NewTask'
+import Home from './page/Home'
+import NewTask from './page/NewTask'
 
 const HomeTask = ({ setSignInGranted, uid }) => {
   const [newTask, setNewTask] = useState(1);
