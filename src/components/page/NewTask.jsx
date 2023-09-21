@@ -35,9 +35,9 @@ const NewTask = ({setNewTask,uid}) => {
   return (
     <div className="flex items-center justify-center h-[100vh]">
       <ToastContainer />
-      <form className="rounded-md border-2  relative bg-white p-20 md:p-10 sm:p-8">
+      <form className="rounded-md border-2  relative bg-white lg:p-20 p-10 sm:p-5 sm:mx-9 ">
         <AiOutlineArrowLeft
-          className="absolute lg:top-9 lg:left-7 md:top-5 md:left-5 sm:top-4 sm:left-3 cursor-pointer lg:text-4xl md:text-2xl sm:text-lg"
+          className="absolute lg:top-9 lg:left-7 md:top-5 md:left-5 sm:top-2 sm:left-3 cursor-pointer lg:text-4xl md:text-2xl sm:text-lg"
           onClick={() => {
             setNewTask(1);
           }}
