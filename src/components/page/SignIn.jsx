@@ -53,27 +53,29 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
   
   return (
     <div className="flex items-center justify-center h-[100vh]">
-    <ToastContainer />
+      <ToastContainer />
       <form
-        className="rounded-md border-2 w-[40%] bg-white p-20"
+        className="rounded-md border-2 bg-white w-[40%] lg:p-20 md:p-14 sm:p-6 sm:w-[70%]"
         autoComplete="off"
         onSubmit={handleSubmit}
       >
-        <h2 className="text-5xl font-bold mb-3">Hello!</h2>
+        <h2 className="font-bold lg:text-5xl lg:mb-3 md:text-3xl sm:text-xl sm:mb-1">
+          Hello!
+        </h2>
 
-        <p className="text-lg font-light">
+        <p className="lg:text-lg md:text-md sm:text-sm font-light">
           Fill your email and password to sign in.
         </p>
         {error ? (
-          <p className="my-3 text-lg font-light bg-red-300 text-black">
+          <p className="lg:my-3 lg:text-lg md:my-2 md:text-md sm:my-1 sm:text-sm font-light bg-red-300 text-black">
             OOPS!!! {error}
           </p>
         ) : null}
 
-        <div className="my-3 ">
+        <div className="lg:my-3 md:my-2 sm:my-1">
           <input
             type="email"
-            className="p-2 w-[100%] border text-lg border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200 focus:border"
+            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200 "
             onChange={handleChange}
             placeholder="email"
             value={input.email}
@@ -85,7 +87,7 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
         <div className="mb-3">
           <input
             type="password"
-            className="border w-[100%] border-slate-300 text-lg rounded-md p-2  hover:bg-slate-100 active:border-cyan-200"
+            className="border w-[100%] border-slate-300 lg:text-lg md:text-md sm:text-sm rounded-md lg:p-2 p-1  hover:bg-slate-100 active:border-cyan-200 "
             onChange={handleChange}
             placeholder="password"
             value={input.password}
@@ -96,21 +98,31 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
         </div>
         <hr className="border-[1px] bg-black" />
 
-        <button
-          type="submit"
-          className="w-[100%] my-2 text-lg transition duration-200 ease-in-out text-white p-1 rounded-md bg-cyan-600 hover:bg-cyan-700"
-        >
-          Sign In
-        </button>
+        <div className="lg:block flex ">
+          <button
+            type="submit"
+            className="lg:w-[100%] w-[45%] md:inline lg:my-2 my-1 lg:text-lg p-1 md:text-md sm:text-sm transition duration-200 ease-in-out text-white lg:p-1 rounded-md bg-cyan-600 hover:bg-cyan-700"
+          >
+            Sign In
+          </button>
 
-        <button
-          onClick={() => {
-            setSignIn(0);
-          }}
-          className="w-[100%] transition text-md duration-200 ease-in-out p-1 rounded-md hover:bg-gray-200"
-        >
-          DON&apos;T HAVE AN ACCOUNT? SIGN UP NOW!
-        </button>
+          <button
+            onClick={() => {
+              setSignIn(0);
+            }}
+            className="lg:hidden w-[45%] transition md:text-md sm:text-sm  duration-200 ease-in-out p-1 rounded-md hover:bg-gray-200"
+          >
+            SIGN UP
+          </button>
+          <button
+            onClick={() => {
+              setSignIn(0);
+            }}
+            className="w-[100%] md:hidden sm:hidden transition text-md duration-200 ease-in-out p-1 rounded-md hover:bg-gray-200"
+          >
+            DON&apos;T HAVE AN ACCOUNT? SIGN UP NOW!
+          </button>
+        </div>
       </form>
     </div>
   );

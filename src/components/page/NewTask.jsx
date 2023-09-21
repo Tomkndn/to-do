@@ -34,24 +34,26 @@ const NewTask = ({setNewTask,uid}) => {
 
   return (
     <div className="flex items-center justify-center h-[100vh]">
-      <ToastContainer/>
-      <form className="rounded-md border-2  relative bg-white p-20">
+      <ToastContainer />
+      <form className="rounded-md border-2  relative bg-white p-20 md:p-10 sm:p-8">
         <AiOutlineArrowLeft
-          className="absolute top-9 left-7 cursor-pointer text-4xl"
+          className="absolute lg:top-9 lg:left-7 md:top-5 md:left-5 sm:top-4 sm:left-3 cursor-pointer lg:text-4xl md:text-2xl sm:text-lg"
           onClick={() => {
             setNewTask(1);
           }}
         />
-        <h2 className="text-5xl font-bold mb-3">Create a new task.</h2>
+        <h2 className="lg:text-5xl md:text-3xl sm:text-xl font-bold mb-3">
+          Create a new task.
+        </h2>
 
-        <p className="text-lg font-light">
+        <p className="lg:text-lg md:text-sm sm:text-xs font-light">
           Provide information about the task you wish to complete.
         </p>
 
         <div className="my-3">
           <input
             type="text"
-            className="p-2 w-[100%] border text-lg border-slate-300 rounded-md hover:bg-slate-100 focus:border-cyan-200 focus:border"
+            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
             id="exampleInputtext"
             placeholder="title"
             name="title"
@@ -63,7 +65,7 @@ const NewTask = ({setNewTask,uid}) => {
         <div className="my-3 ">
           <input
             type="date"
-            className="p-2 w-[100%] text-slate-400 border text-lg border-slate-300 rounded-md hover:bg-slate-100"
+            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
             name="date"
             onChange={handleChange}
             value={input.date}
@@ -73,7 +75,7 @@ const NewTask = ({setNewTask,uid}) => {
         <div className="mb-3">
           <textarea
             type="text"
-            className="border h-20 border-slate-300 text-lg rounded-md p-2 w-[100%] hover:bg-slate-100 focus:border-cyan-200"
+            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
             id="exampleInputTextArea"
             placeholder="Description"
             name="description"
@@ -86,7 +88,7 @@ const NewTask = ({setNewTask,uid}) => {
 
         <button
           onClick={createTask}
-          className="w-[100%] text-lg my-2 transition duration-200 ease-in-out text-white p-1 rounded-md bg-cyan-600 hover:bg-cyan-700"
+          className="w-[100%] lg:my-2 my-2 lg:text-lg p-1 md:text-md sm:text-sm transition duration-200 ease-in-out text-white lg:p-1 rounded-md bg-cyan-600 hover:bg-cyan-700"
         >
           Add
         </button>
