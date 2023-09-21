@@ -6,6 +6,8 @@ import {
 } from "firebase/auth";
 import { firebaseApp } from "../firebase";
 import { getDatabase, ref, set } from "firebase/database";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 const SignUp = ({setSignIn}) => {
@@ -23,20 +25,22 @@ const SignUp = ({setSignIn}) => {
         // let name = input.name;
         let email = input.email;
         let password = input.password;
-
+        
         const db = getDatabase();
         // creating a new user
         createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed up
-                console.log(userCredential.user.uid);
+        .then((userCredential) => {
+          // Signed up
+                // console.log(userCredential.user.uid);
                 set(ref(db, "users/" + userCredential.user.uid), {
                   username: input.name,
                   email: email,
                   password: password,
                 })
-                alert("SignUp Successfully.")
-                setSignIn(1)
+                .then(() => {
+                  toast.success("SignUp successfully")
+                });
+                  setSignIn(1)
             // ...
           })
           .catch((err) => {
@@ -59,6 +63,7 @@ const SignUp = ({setSignIn}) => {
 
   return (
     <div className="flex items-center justify-center h-[100vh]">
+      <ToastContainer/>
       <div
         // method='POST'
         className="rounded-md border-2   bg-white p-20"

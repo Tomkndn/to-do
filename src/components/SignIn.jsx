@@ -6,6 +6,8 @@ import {
   getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
   const [input, setInput] = useState({ email: "", password: "" });
@@ -20,29 +22,26 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
     setError("");
     let email = input.email;
     let password = input.password;
-
     // sign in user
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        // const user = userCredential.user;
-        alert("Succefully SignIn");
-        // console.log(user)
-        setUid(userCredential.user.uid);
+        setUid(userCredential.user.uid)
         // ...
-        setSignInGranted(1);
       })
+      .then(()=>{toast.success("Login Successfully !");})
+      setSignInGranted(1)
       .catch((err) => {
         if (
           err.code === AuthErrorCodes.INVALID_PASSWORD ||
           err.code === AuthErrorCodes.USER_DELETED
-        ) {
-          setError("The email address or password is incorrect");
-        } else {
-          console.log(err.code);
-          alert(err.code);
-        }
-      });
+          ) {
+            setError("The email address or password is incorrect");
+            toast.error("Input Valid Credentials.")
+          } else {
+            toast.error(err.code);
+          }
+        });
   };
 
   const handleChange = (e) => {
@@ -51,9 +50,10 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
       [e.target.name]: e.target.value,
     }));
   };
-
+  
   return (
     <div className="flex items-center justify-center h-[100vh]">
+    <ToastContainer />
       <form
         className="rounded-md border-2 w-[40%] bg-white p-20"
         autoComplete="off"

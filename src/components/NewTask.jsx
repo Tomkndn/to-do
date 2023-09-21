@@ -1,5 +1,8 @@
 import { getDatabase, ref, push} from "firebase/database";
 import {useState} from 'react'
+import {AiOutlineArrowLeft} from 'react-icons/ai'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const NewTask = ({setNewTask,uid}) => {
 
     const [input, setInput] = useState({ title: "", date: "", description: ""});
@@ -14,10 +17,10 @@ const NewTask = ({setNewTask,uid}) => {
       const newTaskRef = push(ref(db, "users/" + uid +"/task"),data);
       newTaskRef
       .then(() => {
-        alert('Task added successfully');
+        toast.success('Task added successfully');
       })
       .catch((error) => {
-        console.error('Error adding data:', error);
+        toast.error('Error adding task:', error);
       });
       setNewTask(1)
     }
@@ -31,7 +34,14 @@ const NewTask = ({setNewTask,uid}) => {
 
   return (
     <div className="flex items-center justify-center h-[100vh]">
-      <div className="rounded-md border-2   bg-white p-20">
+      <ToastContainer/>
+      <form className="rounded-md border-2  relative bg-white p-20">
+        <AiOutlineArrowLeft
+          className="absolute top-9 left-7 cursor-pointer text-4xl"
+          onClick={() => {
+            setNewTask(1);
+          }}
+        />
         <h2 className="text-5xl font-bold mb-3">Create a new task.</h2>
 
         <p className="text-lg font-light">
@@ -80,7 +90,7 @@ const NewTask = ({setNewTask,uid}) => {
         >
           Add
         </button>
-      </div>
+      </form>
     </div>
   );
 }

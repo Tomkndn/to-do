@@ -10,7 +10,6 @@ const HomeTask = ({ setSignInGranted, uid }) => {
         <Home
           setNewTask={setNewTask}
           uid={uid}
-          newTask={newTask}
           setSignInGranted={setSignInGranted}
         />
       ) : (

@@ -3,8 +3,12 @@ import { useEffect } from "react";
 import { useState} from 'react'
 import Task from "./Task";
 import NoTask from "./NoTask";
+import { BsSearch } from "react-icons/bs";
+import { BiLogIn } from "react-icons/bi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
+const Home = ({ setNewTask, setSignInGranted, uid}) => {
   const [name, setName] = useState(null);
   const [empty, setEmpty] = useState(0);
   const [projects,setProjects] = useState([]);
@@ -33,9 +37,8 @@ const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
           newProject.push(data);
         });
         setProjects(newProject)
-        // setProjects((projects) => [...projects, data]);
       });
-    }, [newTask,uid]);
+    }, [uid]);
 
     function deleteTask(title){
       // alert("Hello")
@@ -53,11 +56,11 @@ const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
               const taskRefToDelete = ref(db, `users/${uid}/task/${taskId}`);
               remove(taskRefToDelete)
                 .then(() => {
-                  console.log("Task deleted successfully");
+                  toast.error("Task deleted successfully");
                   // Update the state if needed
                 })
                 .catch((error) => {
-                  console.error("Error deleting task:", error);
+                  toast.error("Error deleting task:", error);
                 });
             }
           });
@@ -66,6 +69,10 @@ const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
       .catch((error) => {
         console.error("Error fetching tasks:", error);
       });
+    }
+
+    function SignOut() {
+      toast.warning("SignOut Successfully !");
     }
 
   return (
@@ -86,25 +93,23 @@ const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
         </button>
         <button
           className="text-lg font-medium rounded-3xl absolute right-0 bg-slate-200 p-3"
-          onClick={() => {
-            setSignInGranted(0);
-          }}
+          onClick={()=>{SignOut();setSignInGranted(0);}}
         >
-          LOG OUT
+          <BiLogIn className="text-3xl" />
         </button>
       </div>
-
       <hr className="border-2 w-[100%] border-slate-400" />
-
       <div className="flex relative w-[100%] my-5">
-        <input
-          className="p-3 pl-12 w-[20rem] text-black-800 hover:bg-slate-300 rounded-lg bg-slate-200"
-          type="search"
-          name="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-
+        <div className="flex relative">
+          <BsSearch className="z-10 absolute left-2 text-2xl top-3 text-slate-500" />
+          <input
+            className="p-3 pl-12 w-[20rem] text-black-800 hover:bg-slate-300 rounded-lg bg-slate-200"
+            type="search"
+            name="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+        </div>
         <div className="absolute right-0">
           <select className="p-3  text-gray-500 hover:bg-slate-300 transition duration-200 ease-in-out bg-slate-200 border rounded-md shadow-sm outline-none  focus:border-indigo-600">
             <option>No filter</option>
@@ -113,20 +118,22 @@ const Home = ({ newTask,setNewTask, setSignInGranted, uid}) => {
           </select>
         </div>
       </div>
-
       <div className="w-[100%]">
-        {empty
-          ? projects.map((project, index) => (
-              <Task
-                key={index}
-                title={project.title}
-                date={project.date}
-                description={project.description}
-                deleteTask={deleteTask}
-              />
-            ))
-          : <NoTask/>}
+        {empty ? (
+          projects.map((project, index) => (
+            <Task
+              key={index}
+              title={project.title}
+              date={project.date}
+              description={project.description}
+              deleteTask={deleteTask}
+            />
+          ))
+        ) : (
+          <NoTask />
+        )}
       </div>
+<ToastContainer />
     </div>
   );
 };
