@@ -1,12 +1,10 @@
-import { getDatabase, ref, push} from "firebase/database";
 import {useState} from 'react'
 import {AiOutlineArrowLeft} from 'react-icons/ai'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const NewTask = ({setNewTask,uid}) => {
+const NewTask = () => {
 
     const [input, setInput] = useState({ title: "", date: "", description: ""});
-    const db = getDatabase();
     function createTask(e){
       e.preventDefault();
       const data = {
@@ -14,15 +12,6 @@ const NewTask = ({setNewTask,uid}) => {
       date: input.date,
       description: input.description,
       }
-      const newTaskRef = push(ref(db, "users/" + uid +"/task"),data);
-      newTaskRef
-      .then(() => {
-        toast.success('Task added successfully');
-      })
-      .catch((error) => {
-        toast.error('Error adding task:', error);
-      });
-      setNewTask(1)
     }
 
     const handleChange = (e) => {
@@ -39,7 +28,7 @@ const NewTask = ({setNewTask,uid}) => {
         <AiOutlineArrowLeft
           className="absolute lg:top-9 lg:left-7 md:top-5 md:left-5 sm:top-2 sm:left-3 cursor-pointer lg:text-4xl md:text-2xl sm:text-lg"
           onClick={() => {
-            setNewTask(1);
+            // setNewTask(1);
           }}
         />
         <h2 className="lg:text-5xl md:text-3xl sm:text-xl font-bold mb-3">

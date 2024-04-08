@@ -1,11 +1,5 @@
 import {useState} from 'react'
-import {
-  AuthErrorCodes,
-  createUserWithEmailAndPassword,
-  getAuth,
-} from "firebase/auth";
-import { firebaseApp } from "../../firebase";
-import { getDatabase, ref, set } from "firebase/database";
+import { supabase } from "../../supabase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -15,8 +9,6 @@ const SignUp = ({setSignIn}) => {
       const [input, setInput] = useState({email: "", password: "" });
       const [error, setError] = useState(null);
 
-      // initialised auth instance
-      const auth = getAuth(firebaseApp);
 
       // handle form submit
       const handleSubmit = (e) => {
@@ -26,32 +18,6 @@ const SignUp = ({setSignIn}) => {
         let email = input.email;
         let password = input.password;
         
-        const db = getDatabase();
-        // creating a new user
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed up
-                // console.log(userCredential.user.uid);
-                set(ref(db, "users/" + userCredential.user.uid), {
-                  username: input.name,
-                  email: email,
-                  password: password,
-                })
-                .then(() => {
-                  toast.success("SignUp successfully")
-                });
-                  setSignIn(1)
-            // ...
-          })
-          .catch((err) => {
-            if (err.code === AuthErrorCodes.WEAK_PASSWORD) {
-              setError("The password is too weak.");
-            } else if (err.code === AuthErrorCodes.EMAIL_EXISTS) {
-              setError("The email address is already in use.");
-            } else {
-              setError("Some error occured!!!. try later");
-            }
-          });
       };
 
       const handleChange = (e) => {

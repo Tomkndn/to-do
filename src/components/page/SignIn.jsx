@@ -1,20 +1,13 @@
 import "./SignIn";
 import { useState } from 'react'
-import { firebaseApp } from "../../firebase";
-import {
-  AuthErrorCodes,
-  getAuth,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
+import { supabase } from "../../supabase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
+const SignIn = ({ setSignIn }) => {
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
 
-  // initialised auth instance
-  const auth = getAuth(firebaseApp);
 
   // handle form submit
   const handleSubmit = (e) => {
@@ -22,28 +15,14 @@ const SignIn = ({ setSignIn, setSignInGranted, setUid }) => {
     setError("");
     let email = input.email;
     let password = input.password;
-    // sign in user
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        setUid(userCredential.user.uid)
-        // ...
-      })
-      .then(()=>{toast.success("Login Successfully !");})
-      setSignInGranted(1)
-      .catch((err) => {
-        if (
-          err.code === AuthErrorCodes.INVALID_PASSWORD ||
-          err.code === AuthErrorCodes.USER_DELETED
-          ) {
-            setError("The email address or password is incorrect");
-            toast.error("Input Valid Credentials.")
-          } else {
-            toast.error(err.code);
-          }
-        });
+    
+    
+    const { data, error } =  supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
   };
-
+    
   const handleChange = (e) => {
     setInput((prevState) => ({
       ...prevState,

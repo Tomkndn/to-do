@@ -1,12 +1,3 @@
-import {
-  getDatabase,
-  ref,
-  child,
-  get,
-  onValue,
-  remove,
-} from "firebase/database";
-import { useEffect } from "react";
 import { useState } from "react";
 import Task from "../Task";
 import NoTask from "../NoTask";
@@ -15,71 +6,14 @@ import { BiLogIn } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getAuth, signOut } from "firebase/auth";
 
 
-const Home = ({ setNewTask, setSignInGranted, uid }) => {
+const Home = () => {
   const [name, setName] = useState(null);
   const [empty, setEmpty] = useState(0);
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
 
-  const dbRef = ref(getDatabase());
-  const db = getDatabase();
-  const starCountRef = ref(db, "users/" + uid + "/task");
-  get(child(dbRef, `users/${uid}`)).then((snapshot) => {
-    setName(snapshot.val().username);
-    if (snapshot.exists() && projects.length) {
-      setEmpty(1);
-    } else {
-      setEmpty(0);
-    }
-  });
-
-  useEffect(() => {
-    onValue(starCountRef, (snapshot) => {
-      const newProject = [];
-      Object.values(snapshot.val()).forEach((val) => {
-        const data = {
-          title: val.title,
-          date: val.date,
-          description: val.description,
-        };
-        newProject.push(data);
-      });
-      setProjects(newProject);
-    });
-  }, [uid]);
-
-  function deleteTask(title) {
-    // alert("Hello")
-    const updatedProjects = projects.filter(
-      (project) => project.title !== title
-    );
-    setProjects(updatedProjects);
-
-    get(starCountRef)
-      .then((snapshot) => {
-        const tasks = snapshot.val();
-        // Find the task with the matching title and delete it
-        Object.keys(tasks).forEach((taskId) => {
-          if (tasks[taskId].title === title) {
-            const taskRefToDelete = ref(db, `users/${uid}/task/${taskId}`);
-            remove(taskRefToDelete)
-              .then(() => {
-                toast.error("Task deleted successfully");
-                // Update the state if needed
-              })
-              .catch((error) => {
-                toast.error("Error deleting task:", error);
-              });
-          }
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching tasks:", error);
-      });
-  }
 
 
   return (
@@ -94,7 +28,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
 
         <button
           onClick={() => {
-            setNewTask(0);
+            // setNewTask(0);
           }}
           className="lg:text-lg md:text-md sm:hidden font-medium rounded-2xl absolute right-[4rem] bg-slate-200 p-3"
         >
@@ -102,7 +36,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         </button>
         <button
           onClick={() => {
-            setNewTask(0);
+            // setNewTask(0);
           }}
           className="lg:hidden md:hidden sm:text-sm font-medium rounded-2xl absolute right-[4rem] bg-slate-200 p-3"
         >
@@ -111,18 +45,6 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         <button
           className="text-lg font-medium rounded-3xl absolute right-0 bg-slate-200 p-3"
           onClick={() => {
-            setSignInGranted(0);
-            const auth = getAuth();
-            signOut(auth)
-              .then(() => {
-                // Sign-out successful.
-                toast.warning("SignOut Successfully !");
-
-              })
-              .catch(() => {
-                // An error happened.
-                toast.error("Problem in SignUp");
-              });
           }}
         >
           <BiLogIn className="lg:text-3xl md:text-2xl sm:text-xl" />
@@ -164,7 +86,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
               title={project.title}
               date={project.date}
               description={project.description}
-              deleteTask={deleteTask}
+              // deleteTask={deleteTask}
             />
           ))
         ) : (
