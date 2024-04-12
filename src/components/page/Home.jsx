@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Task from "../Task";
 import NoTask from "../NoTask";
 import { BsSearch } from "react-icons/bs";
@@ -6,16 +6,47 @@ import { BiLogIn } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { supabase } from "../../supabase";
 
-
-const Home = () => {
+const Home = ({ setNewTask, setSignInGranted, uid }) => {
   const [name, setName] = useState(null);
-  const [empty, setEmpty] = useState(0);
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
 
+  useEffect( () =>  {
+    async function handle() {
+      const { data: users, error } = await supabase
+        .from("users")
+        .select('*')
+        .eq('uuid', uid);
+      setName(users[0].username.toUpperCase());
+      setProjects(users[0].task );
+    }
+    handle();
+  }, [uid])
 
+  async function deleteTask(title) {
+    try{
+      const updatedProjects = projects.filter(
+        (project) => project.title !== title
+      );
+      
+      const { error } = await supabase
+      .from("users")
+      .update({ task: updatedProjects })
+      .eq("uuid", uid);
+      
+      if (error) {
+        toast.error("Error deleting task:", error);
+      }
 
+      setProjects(updatedProjects);
+      toast.success("Task deleted successfully");
+
+    } catch (error) {
+      toast.error("An unexpected error occurred. Please try again later.");
+    }
+  }
   return (
     <div className="flex justify-center flex-col items-center lg:mx-[18rem] mx-5 ">
       <div className="flex mt-[3.5rem] relative mb-7 sm:mb-4 w-[100%]">
@@ -28,7 +59,7 @@ const Home = () => {
 
         <button
           onClick={() => {
-            // setNewTask(0);
+            setNewTask(0);
           }}
           className="lg:text-lg md:text-md sm:hidden font-medium rounded-2xl absolute right-[4rem] bg-slate-200 p-3"
         >
@@ -36,7 +67,7 @@ const Home = () => {
         </button>
         <button
           onClick={() => {
-            // setNewTask(0);
+            setNewTask(0);
           }}
           className="lg:hidden md:hidden sm:text-sm font-medium rounded-2xl absolute right-[4rem] bg-slate-200 p-3"
         >
@@ -45,6 +76,8 @@ const Home = () => {
         <button
           className="text-lg font-medium rounded-3xl absolute right-0 bg-slate-200 p-3"
           onClick={() => {
+            toast.warning("SignOut Successfully !");
+            setSignInGranted(0);
           }}
         >
           <BiLogIn className="lg:text-3xl md:text-2xl sm:text-xl" />
@@ -61,10 +94,10 @@ const Home = () => {
             placeholder="Search"
             onChange={(e) => {
               setSearch(e.target.value);
-              const updatedProjects = projects.filter(
-                (project) => project.title === search
-              );
-              setProjects(updatedProjects);
+              //   const updatedProjects = projects.filter(
+              //     (project) => project.title === search
+              //   );
+              //   setProjects(updatedProjects);
             }}
             value={search}
             aria-label="Search"
@@ -79,14 +112,14 @@ const Home = () => {
         </div>
       </div>
       <div className="w-[100%]">
-        {empty ? (
+        {projects && projects.length  ? (
           projects.map((project, index) => (
             <Task
               key={index}
               title={project.title}
               date={project.date}
               description={project.description}
-              // deleteTask={deleteTask}
+              deleteTask={deleteTask}
             />
           ))
         ) : (

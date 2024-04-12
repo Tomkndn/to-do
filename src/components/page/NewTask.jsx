@@ -1,34 +1,69 @@
-import {useState} from 'react'
+import { useState } from 'react'
+import { supabase } from '../../supabase';
 import {AiOutlineArrowLeft} from 'react-icons/ai'
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-const NewTask = () => {
+import { toast } from "react-toastify";
 
-    const [input, setInput] = useState({ title: "", date: "", description: ""});
-    function createTask(e){
-      e.preventDefault();
-      const data = {
-      title: input.title,
-      date: input.date,
-      description: input.description,
-      }
+const NewTask = ({setNewTask,uid}) => {
+
+  const [input, setInput] = useState({ title: "", date: "", description: "" });
+  
+  async function createTask(e){
+    e.preventDefault();
+    const newTask = {
+    title: input.title,
+    date: input.date,
+    description: input.description,
     }
+    try {
+      // Fetch existing JSON data
+      const { data, error } = await supabase
+        .from('users')
+        .select('task')
+        .eq('uuid', uid);
 
-    const handleChange = (e) => {
-      setInput((prevState) => ({
-        ...prevState,
-        [e.target.name]: e.target.value,
-      }));
-    };
+      if (error) {
+        throw error;
+      }
+
+      // Extract existing JSON data or initialize to an empty array if it doesn't exist yet
+      const existingData = data ? data[0].task || [] : [];
+
+      // Append new task
+      const newData = [...existingData, newTask ];
+
+      // Update the JSON column in the database
+      const { error: updateError } = await supabase
+      .from("users")
+      .update({ task: newData })
+      .eq("uuid", uid);
+      
+      if (updateError) {
+        throw updateError;
+      } else {
+        toast.success("Task added successfully");
+        setNewTask(1);
+      }
+        
+    } catch (error) {
+      console.error('Error adding task:', error.message);
+      toast.error("Error adding task:", error);
+    }
+  }
+
+  const handleChange = (e) => {
+    setInput((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
   return (
     <div className="flex items-center justify-center h-[100vh]">
-      <ToastContainer />
       <form className="rounded-md border-2  relative bg-white lg:p-20 p-10 sm:p-5 sm:mx-9 ">
         <AiOutlineArrowLeft
           className="absolute lg:top-9 lg:left-7 md:top-5 md:left-5 sm:top-2 sm:left-3 cursor-pointer lg:text-4xl md:text-2xl sm:text-lg"
           onClick={() => {
-            // setNewTask(1);
+            setNewTask(1);
           }}
         />
         <h2 className="lg:text-5xl md:text-3xl sm:text-xl font-bold mb-3">

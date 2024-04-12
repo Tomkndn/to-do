@@ -4,32 +4,51 @@ import { supabase } from "../../supabase";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const SignIn = ({ setSignIn }) => {
+const SignIn = ({ setSignIn, setSignInGranted,setUid }) => {
   const [input, setInput] = useState({ email: "", password: "" });
   const [error, setError] = useState(null);
 
-
   // handle form submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     let email = input.email;
     let password = input.password;
-    
-    
-    const { data, error } =  supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    })
+
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email,
+        password: password,
+      });
+      if (error) {
+        console.log(error);
+        // Handle the error here
+        if (error.message === "Invalid login credentials") {
+           setError("The email address or password is incorrect");
+           toast.error("Input Valid Credentials.");
+        } else {
+          toast.error(err.code);
+        }
+        return;
+      }
+      if (data) {
+        // console.log(data);
+        toast.success("Login Successfully !");
+        setUid(data.user.id);
+        setSignInGranted(1);
+      }
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
   };
-    
+
   const handleChange = (e) => {
     setInput((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-  
+
   return (
     <div className="flex items-center justify-center h-[100vh]">
       <ToastContainer />

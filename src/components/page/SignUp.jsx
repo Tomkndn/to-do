@@ -4,20 +4,54 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
-const SignUp = ({setSignIn}) => {
+const SignUp =  ({setSignIn}) => {
 
-      const [input, setInput] = useState({email: "", password: "" });
+      const [input, setInput] = useState({email: "", password: "" ,name: ""});
       const [error, setError] = useState(null);
 
 
       // handle form submit
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
-        // let name = input.name;
+        let name = input.name;
         let email = input.email;
         let password = input.password;
-        
+
+        try {
+          const { data, error } = await supabase.auth.signUp({
+            email: email,
+            password: password,
+          });
+          if (error) {
+            // Handle the error here
+            if (error.message === "AuthApiError: Email rate limit exceeded") {
+              setError("Email rate limit exceeded. Please try again later.");
+            } else if (error.message.includes("already registered")) {
+              setError("The email address is already in use.");
+            } else {
+              setError("Some error occured!!!. try later");
+            }
+            return;
+          }
+          if (data) {
+            toast.success("SignUp successfully");
+            // console.log(data);
+            const { error } = await supabase.from("users").insert([
+              {
+                uuid: data.user.id,
+                username: name,
+              },
+            ]);
+            if (error) {
+              console.log(error);
+            };
+            setSignIn(1);
+          }
+        } catch (error) {
+          setError("Unexpected error:");
+        }
+
       };
 
       const handleChange = (e) => {

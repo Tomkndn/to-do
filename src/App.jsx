@@ -2,6 +2,8 @@ import './App.css'
 import {useState} from 'react'
 import SignInOut from './components/SignInOut'
 import HomeTask from './components/HomeTask'
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
 
@@ -15,6 +17,7 @@ function App() {
       ) : (
         <SignInOut setUid={setUid} setSignInGranted={setSignInGranted} />
       )}
+      <ToastContainer />;
     </>
   );
 }
