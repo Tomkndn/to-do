@@ -7,11 +7,14 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { supabase } from "../../supabase";
+import Loading from "../Loading";
 
 const Home = ({ setNewTask, setSignInGranted, uid }) => {
   const [name, setName] = useState(null);
   const [projects, setProjects] = useState([]);
   const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
 
   useEffect( () =>  {
     async function handle() {
@@ -20,10 +23,13 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         .select('*')
         .eq('uuid', uid);
       setName(users[0].username.toUpperCase());
-      setProjects(users[0].task );
+      setProjects(users[0].task);
+      setIsLoading(true);
     }
     handle();
   }, [uid])
+
+  if (!isLoading) return <Loading />;
 
   async function deleteTask(title) {
     try{

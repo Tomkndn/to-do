@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import Home from './page/Home'
 import NewTask from './page/NewTask'
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const HomeTask = ({ setSignInGranted, uid }) => {
