@@ -5,13 +5,13 @@ import { toast } from "react-toastify";
 
 const NewTask = ({setNewTask,uid}) => {
 
-  const [input, setInput] = useState({ title: "", date: "", description: "" });
+  const [input, setInput] = useState({ title: "", filter: "Pending", description: "" });
   
   async function createTask(e){
     e.preventDefault();
     const newTask = {
     title: input.title,
-    date: input.date,
+    filter: input.filter,
     description: input.description,
     }
     try {
@@ -87,14 +87,16 @@ const NewTask = ({setNewTask,uid}) => {
           />
         </div>
         <div className="my-3 ">
-          <input
-            type="date"
-            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
-            name="date"
+          <select
+            id="dropdown"
+            className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm text-gray-400 border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
+            name='filter'
             onChange={handleChange}
-            value={input.date}
-            required
-          />
+            value={input.filter}
+          >
+            <option>Pending</option>
+            <option>Completed</option>
+          </select>
         </div>
         <div className="mb-3">
           <textarea

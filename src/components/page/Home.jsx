@@ -12,6 +12,7 @@ import Loading from "../Loading";
 const Home = ({ setNewTask, setSignInGranted, uid }) => {
   const [name, setName] = useState(null);
   const [projects, setProjects] = useState([]);
+  const [filtered, setfiltered] = useState([]);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -24,6 +25,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         .eq('uuid', uid);
       setName(users[0].username.toUpperCase());
       setProjects(users[0].task);
+      setfiltered(users[0].task);
       setIsLoading(true);
     }
     handle();
@@ -53,6 +55,19 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
       toast.error("An unexpected error occurred. Please try again later.");
     }
   }
+
+  const handleFilter = (e) => {
+    const filterData = e.target.value;
+    if (filterData == "No filter") {
+      setfiltered(projects);
+    } else{
+      const updatedProjects = projects.filter((project) =>
+        project.filter == filterData 
+      );
+      setfiltered(updatedProjects);
+    }
+  }
+
   return (
     <div className="flex justify-center flex-col items-center lg:mx-[18rem] mx-5 ">
       <div className="flex mt-[3.5rem] relative mb-7 sm:mb-4 w-[100%]">
@@ -100,17 +115,23 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
             placeholder="Search"
             onChange={(e) => {
               setSearch(e.target.value);
-              //   const updatedProjects = projects.filter(
-              //     (project) => project.title === search
-              //   );
-              //   setProjects(updatedProjects);
+              if (e.target.value == "") {
+                setfiltered(projects);
+              } else { 
+                const updatedProjects = projects.filter((project) =>
+                  project.title.toLowerCase().includes(e.target.value.toLowerCase())
+                );
+                setfiltered(updatedProjects);
+              }
             }}
             value={search}
             aria-label="Search"
           />
         </div>
         <div className="absolute right-0 sm:hidden">
-          <select className="p-3  text-gray-500 hover:bg-slate-300 transition duration-200 ease-in-out bg-slate-200 border rounded-md shadow-sm outline-none  focus:border-indigo-600">
+          <select className="p-3  text-gray-500 hover:bg-slate-300 transition duration-200 ease-in-out bg-slate-200 border rounded-md shadow-sm outline-none  focus:border-indigo-600"
+            onChange={handleFilter}
+          >
             <option>No filter</option>
             <option>Completed</option>
             <option>Pending</option>
@@ -118,12 +139,12 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
         </div>
       </div>
       <div className="w-[100%]">
-        {projects && projects.length  ? (
-          projects.map((project, index) => (
+        {filtered && filtered.length ? (
+          filtered.map((project, index) => (
             <Task
               key={index}
               title={project.title}
-              date={project.date}
+              filter={project.filter}
               description={project.description}
               deleteTask={deleteTask}
             />
