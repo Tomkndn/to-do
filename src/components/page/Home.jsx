@@ -4,7 +4,7 @@ import NoTask from "../NoTask";
 import { BsSearch } from "react-icons/bs";
 import { BiLogIn } from "react-icons/bi";
 import { AiOutlinePlus } from "react-icons/ai";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { supabase } from "../../supabase";
 import Loading from "../Loading";
@@ -49,6 +49,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
       }
 
       setProjects(updatedProjects);
+      setfiltered(updatedProjects);
       toast.success("Task deleted successfully");
 
     } catch (error) {
@@ -117,9 +118,11 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
               setSearch(e.target.value);
               if (e.target.value == "") {
                 setfiltered(projects);
-              } else { 
+              } else {
                 const updatedProjects = projects.filter((project) =>
-                  project.title.toLowerCase().includes(e.target.value.toLowerCase())
+                  project.title
+                    .toLowerCase()
+                    .includes(e.target.value.toLowerCase())
                 );
                 setfiltered(updatedProjects);
               }
@@ -129,7 +132,8 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
           />
         </div>
         <div className="absolute right-0 sm:hidden">
-          <select className="p-3  text-gray-500 hover:bg-slate-300 transition duration-200 ease-in-out bg-slate-200 border rounded-md shadow-sm outline-none  focus:border-indigo-600"
+          <select
+            className="p-3  text-gray-500 hover:bg-slate-300 transition duration-200 ease-in-out bg-slate-200 border rounded-md shadow-sm outline-none  focus:border-indigo-600"
             onChange={handleFilter}
           >
             <option>No filter</option>
@@ -147,13 +151,14 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
               filter={project.filter}
               description={project.description}
               deleteTask={deleteTask}
+              uid={uid}
+              projects={projects}
             />
           ))
         ) : (
           <NoTask />
         )}
       </div>
-      <ToastContainer />
     </div>
   );
 };

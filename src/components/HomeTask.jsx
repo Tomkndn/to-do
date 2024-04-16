@@ -17,7 +17,6 @@ const HomeTask = ({ setSignInGranted, uid }) => {
       ) : (
         <NewTask setNewTask={setNewTask} uid={uid} />
       )}
-      <ToastContainer/>
     </div>
   );
 };

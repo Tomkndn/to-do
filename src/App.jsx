@@ -17,7 +17,7 @@ function App() {
       ) : (
         <SignInOut setUid={setUid} setSignInGranted={setSignInGranted} />
       )}
-      <ToastContainer />;
+      <ToastContainer autoClose={1000} />;
     </>
   );
 }
