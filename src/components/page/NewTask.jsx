@@ -88,7 +88,6 @@ const NewTask = ({setNewTask,uid}) => {
         </div>
         <div className="my-3 ">
           <select
-            id="dropdown"
             className="lg:p-2 p-1 w-[100%] border lg:text-lg md:text-md sm:text-sm text-gray-400 border-slate-300 rounded-md hover:bg-slate-100 active:border-cyan-200"
             name='filter'
             onChange={handleChange}

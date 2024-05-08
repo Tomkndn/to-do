@@ -17,19 +17,19 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
   const [isLoading, setIsLoading] = useState(false);
 
 
-  useEffect( () =>  {
+  useEffect(() => {
     async function handle() {
       const { data: users, error } = await supabase
         .from("users")
-        .select('*')
-        .eq('uuid', uid);
+        .select("*")
+        .eq("uuid", uid);
       setName(users[0].username.toUpperCase());
       setProjects(users[0].task);
       setfiltered(users[0].task);
       setIsLoading(true);
     }
     handle();
-  }, [uid])
+  }, [uid, isLoading]);
 
   if (!isLoading) return <Loading />;
 
@@ -64,7 +64,8 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
     } else{
       const updatedProjects = projects.filter((project) =>
         project.filter == filterData 
-      );
+      ); 
+      console.log(updatedProjects);
       setfiltered(updatedProjects);
     }
   }
@@ -153,6 +154,7 @@ const Home = ({ setNewTask, setSignInGranted, uid }) => {
               deleteTask={deleteTask}
               uid={uid}
               projects={projects}
+              setIsLoading={setIsLoading}
             />
           ))
         ) : (

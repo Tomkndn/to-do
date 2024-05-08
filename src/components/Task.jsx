@@ -4,11 +4,18 @@ import { supabase } from "../supabase";
 import {  toast } from "react-toastify";
 
 
-const Task = ({ title, filter, description, deleteTask,uid,projects }) => {
-  const [updateFilter, setUpdateFilter] = useState(filter)
-  
-  function filterChange(e) {
+const Task = ({
+  title,
+  filter,
+  description,
+  deleteTask,
+  uid,
+  projects,
+  setIsLoading,
+}) => {
+  const [updateFilter, setUpdateFilter] = useState(filter);
 
+  function filterChange(e) {
     const newFilter = e.target.value;
 
     const taskIndex = projects.findIndex((task) => task.title === title);
@@ -22,7 +29,7 @@ const Task = ({ title, filter, description, deleteTask,uid,projects }) => {
       };
 
       supabase
-        .from("users") 
+        .from("users")
         .update({ task: updatedProjects })
         .eq("uuid", uid)
         .then((response) => {
@@ -36,6 +43,7 @@ const Task = ({ title, filter, description, deleteTask,uid,projects }) => {
         .catch((error) => {
           toast.error("Error updating filter");
         });
+      setIsLoading(false);
     }
   }
 
@@ -48,7 +56,6 @@ const Task = ({ title, filter, description, deleteTask,uid,projects }) => {
       <h2 className="p-2">{title}</h2>
 
       <select
-        id="dropdown"
         className="text-base sm:text-sm inline-block text-gray-500 active:border-gray-500"
         name="filter"
         value={updateFilter}
